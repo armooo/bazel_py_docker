@@ -1,0 +1,23 @@
+#!/bin/bash
+
+BASE_PATH=$( dirname "${BASH_SOURCE[0]}" )
+BASE_NAME=$( basename "${BASH_SOURCE[0]}" )
+
+if [ -d "$BASE_PATH/$BASE_NAME.runfiles" ]; then
+    # Top level script next to the runfiles
+    RUNFILES="$BASE_PATH/$BASE_NAME.runfiles"
+else
+    # Script embedded inside the runfiles
+    RUNFILES="$BASE_PATH"
+    while [[ $( basename "$RUNFILES") != *.runfiles ]]; do
+        RUNFILES="$( dirname "$RUNFILES" )"
+    done
+fi
+
+export WORKSPACE_RUNFILES="$RUNFILES/{workspace_name}"
+BIN_PATH="$WORKSPACE_RUNFILES/{sh_script}"
+
+export LD_LIBRARY_PATH="$BIN_PATH@deb_root/lib:$BIN_PATH@deb_root/lib/x86_64-linux-gnu:$BIN_PATH@deb_root/usr/lib:$BIN_PATH@deb_root/usr/lib/x86_64-linux-gnu"
+export PYTHONPATH="$( dirname "$WORKSPACE_RUNFILES"/{python_script} ):$WORKSPACE_RUNFILES:$BIN_PATH@py_root"
+
+exec "$BIN_PATH"@deb_root/usr/bin/python2.7 "$WORKSPACE_RUNFILES"/{python_script} $@
