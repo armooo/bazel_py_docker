@@ -7,8 +7,8 @@ py_library(
     name='hello_world_lib',
     srcs=['hello_world.py'],
     deps=[
-        '@python-mysqldb//:files',
         '@requests//:requests',
+        '@python-mysqldb//:files',
     ]
 )
 

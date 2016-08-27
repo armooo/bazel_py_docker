@@ -32,10 +32,21 @@ def main(args):
 
                 if file_hash not in file_set:
                     file_set.add(file_hash)
-                    output.add(path, hash_path)
+                    content = tarfile.TarInfo(hash_path)
+                    content.mtime = 0
+                    content.uname = 'nobody'
+                    content.gname = 'nobody'
+                    stat = os.stat(path)
+                    content.size = stat.st_size
+                    content.mode = stat.st_mode
+                    with open(path) as f:
+                        output.addfile(content, f)
 
                 ln = tarfile.TarInfo(tar_name)
                 ln.type = tarfile.SYMTYPE
+                ln.mtime = 0
+                ln.uname = 'nobody'
+                ln.gname = 'nobody'
                 linkname = (['..'] * tar_name.count('/')) + [hash_path]
                 ln.linkname = os.path.join(*linkname)
                 output.addfile(ln)

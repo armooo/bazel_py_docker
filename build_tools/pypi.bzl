@@ -7,6 +7,7 @@ def pypi_library_impl(ctx):
         executable=ctx.executable._pip,
         arguments=[
             'install',
+            '--no-cache-dir',
             '--no-deps',
             '--upgrade',
             '--target', out_path,

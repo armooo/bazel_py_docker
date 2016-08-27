@@ -10,7 +10,14 @@ def py_library_impl(ctx):
     else:
         py_deps = ctx.files.srcs
 
+    deb_deps = [
+        d
+        for dep in ctx.attr.deps
+        for d in getattr(dep, 'deb_deps', [])
+    ]
+
     return struct(
+        deb_deps=deb_deps,
         py_deps=py_deps,
         py_deps_external=py_deps_external,
     )
