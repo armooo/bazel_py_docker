@@ -11,7 +11,7 @@ def simple_app(environ, start_response):
 
     helper_path = os.path.join(
         os.environ['WORKSPACE_RUNFILES'],
-        'demo/hello_world_helper',
+        'demo/hello_world',
     )
     out = subprocess.check_output(helper_path)
 

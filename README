@@ -1,0 +1,121 @@
+Here lies some sample bazel python rules
+========================================
+
+The rules here allow you to build docker images for your python apps. They use
+docker images as a base and install the output of a bazel build using a
+combination of Debian and pypi packages.
+
+Example
+=======
+
+$ bazel run //demo:hello_world_image
+$ docker run -p8000:8000 -d bazel/demo:hello_world_image
+$ curl http://localhost:8000
+$ docker rm -f (docker ps | awk '/hello_world_image/{print $1}')
+
+
+The rules
+=========
+
+py_library
+----------
+Creates a library of python files.
+
+By default srcs are assumed to have the correct python module layout in the
+source tree. They will be directly copied into  the runfiles. If external is
+True the files will be added to a extra py_root which will be added as a top
+level path to PYTHONPATH. This path will also contain any pypi libraries.
+
+A py_library can depend on other py_library pypi_library, and deb_files rules.
+
+py_library(
+    srcs=[glob('*.py')],
+    external=False,
+    deps=[],
+)
+
+
+py_binary
+---------
+Create a python executable.
+
+Builds a shell script that sets up an isolatedish python environment and then
+runs your file.
+
+A py_binary can depend on py_library pypi_library, and deb_files rules.
+
+py_binary(
+    src='main.py',
+    deps=[],
+)
+
+
+pypi
+----
+A workspace rule to download and create a pypi_library. You must call
+pip_bootstrap() when using the rule. Creates a target
+@<package_name>//:<package_name>.
+
+pypi(
+    name='requests',
+    version='2.10.0',
+)
+
+This creates the target @requests//:requests.
+
+
+pip_bootstrap
+-------------
+A workspace rule that installs pip. Required to use a pypi rule.
+
+pip_bootstrap()
+
+
+apt_fetch
+---------
+A workspace rule that creates a deb_files rule. If you require a c library this
+is a simple way to get it. You can also depend on packages like python-mysqldb
+and they will be installed into dist-packages.
+
+In most cases you will want to use ./build_tools/deb_deps.py to generate the
+list of dependencies. It takes a path to a file of Debian package names and
+using the local system's apt cache output the required apt_fetch rules. It
+assumes all Required packages are installed on the targeted system.
+
+apt_fetch(
+    name='libpython-stdlib',
+    url='http://desktop.armooo.net/pool/main/p/python-defaults/libpython-stdlib_2.7.9-1_amd64.deb',
+    sha256='5f9ffb96222498c764526a83cac48281a941ec6e8470db1a1f8e17e6236a5669',
+    deps=[
+        'libpython2.7-stdlib',
+    ]
+)
+
+
+docker_pull
+-----------
+A workspace rule the makes a docker image available to bazel. This rule assumes
+that docker is installed and the current user can run `docker pull`.
+
+Creates a docker_build named @name//:image.
+
+docker_pull(
+    name='debian_jessie',
+    repository='debian',
+    digest='sha256:8b1fc3a7a55c42e3445155b2f8f40c55de5f8bc8012992b26b570530c4bded9e',
+)
+
+This creates a docker_build target named @debian_jessie//:image.
+
+
+tar_pkg
+-------
+Creates a tar file including runfiles. The content is deduped into a symlink
+farm as part of the tar file creation.
+
+tar_pkg(
+    name='app',
+    files='//demo:hello_world'
+)
+
+This creates app.tar when extracted includes the hello_world binary.

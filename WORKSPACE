@@ -13,7 +13,7 @@ pypi(
 docker_pull(
     name='debian_jessie',
     repository='debian',
-    digest='sha256:8b1fc3a7a55c42e3445155b2f8f40c55de5f8bc8012992b26b570530c4bded9e',
+    digest='sha256:ffb60fdbc401b2a692eef8d04616fca15905dce259d1499d96521970ed0bec36',
 )
 
 docker_pull(
