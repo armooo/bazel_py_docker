@@ -7,7 +7,7 @@ pip wheel --no-deps --wheel-dir "$1" "$2==$3"
 pip install --target="$1"/tmp "$1"/*.whl
 
 cat > "$1"/BUILD << EOF
-load('@//build_tools:pypi.bzl', 'pypi_library')
+load('@bazel_py_docker//build_tools:pypi.bzl', 'pypi_library')
 
 pypi_library(
    name='$2',

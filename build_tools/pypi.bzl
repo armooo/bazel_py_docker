@@ -55,7 +55,7 @@ pypi = repository_rule(
     attrs={
         'version': attr.string(mandatory=True),
         '_pypi_get': attr.label(
-            default=Label('//build_tools:pypi_get.sh'),
+            default=Label('//build_tools:pypi_get.sh', ),
             executable=True,
         ),
     },
@@ -63,7 +63,7 @@ pypi = repository_rule(
 
 
 PIP_BUILD = """
-load('@//build_tools:py.bzl', 'py_binary', 'py_library')
+load('@bazel_py_docker//build_tools:py.bzl', 'py_binary', 'py_library')
 py_library(
    name='pip_lib',
    external=True,

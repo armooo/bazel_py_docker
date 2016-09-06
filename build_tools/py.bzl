@@ -123,15 +123,18 @@ py_binary = rule(
         ),
         'deps': attr.label_list(),
         'python': attr.label(
-            default=Label('@python//:files'),
+            default=Label(
+                '@python//:files',
+                relative_to_caller_repository=True,
+            ),
         ),
         '_py_run_tmpl': attr.label(
             allow_files=True,
             single_file=True,
-            default=Label('@//build_tools:py_run.tmpl'),
+            default=Label('//build_tools:py_run.tmpl'),
         ),
         'copy_files': attr.label(
-            default=Label('@//build_tools:copy_files'),
+            default=Label('//build_tools:copy_files'),
             executable=True,
         ),
     },

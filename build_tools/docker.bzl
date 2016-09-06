@@ -27,8 +27,8 @@ genrule(
     name='layer',
     srcs=['docker_save.tar'],
     outs=['layer.tar'],
-    tools=['@//build_tools:flatten_image'],
-    cmd='$(location @//build_tools:flatten_image) $< $@',
+    tools=['@bazel_py_docker//build_tools:flatten_image'],
+    cmd='$(location @bazel_py_docker//build_tools:flatten_image) $< $@',
 )
 
 docker_build(

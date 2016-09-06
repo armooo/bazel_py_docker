@@ -1,3 +1,5 @@
+
+workspace(name='bazel_py_docker')
 load('//build_tools:docker.bzl', 'docker_pull')
 load('//build_tools:pypi.bzl', 'pip_bootstrap', 'pypi')
 load('//apt:pkgs.bzl', 'load_apt')

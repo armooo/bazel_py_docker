@@ -51,7 +51,7 @@ def apt_fetch_impl(repository_ctx):
     ]
 
     build_file = """
-load('@//build_tools:deb.bzl', 'deb_files')
+load('@bazel_py_docker//build_tools:deb.bzl', 'deb_files')
 
 deb_files(
     name='files',
