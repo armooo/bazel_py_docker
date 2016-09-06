@@ -21,7 +21,9 @@ def get_required_version(package_name):
 
         # We only care about the newest versions and the results seems sorted
         # to me
-        version = package.versions[0]
+        for version in package.versions:
+            if version.uri is not None:
+                break
 
         # We assume the base system has all required packages
         if version.priority == 'required':
