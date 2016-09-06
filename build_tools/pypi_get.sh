@@ -4,7 +4,7 @@ pip wheel --no-deps --wheel-dir "$1" "$2==$3"
 # We install this because we are lazy. We should be able look at the wheel and
 # tell what would be installed. Also this is some fun with bash and awk who
 # could not resist.
-pip install --target="$1"/tmp "$1"/*.whl
+pip install --no-deps --target="$1"/tmp "$1"/*.whl
 
 cat > "$1"/BUILD << EOF
 load('@bazel_py_docker//build_tools:pypi.bzl', 'pypi_library')
