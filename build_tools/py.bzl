@@ -24,6 +24,10 @@ def py_library_impl(ctx):
         deb_deps=deb_deps,
         py_deps=py_deps,
         py_deps_external=py_deps_external,
+        runfiles=ctx.runfiles(
+            files=ctx.files.data,
+            collect_data=True,
+        ),
     )
 
 
@@ -32,6 +36,7 @@ py_library = rule(
     attrs={
         'srcs': attr.label_list(allow_files=['.py', '.so']),
         'external': attr.bool(default=False),
+        'data': attr.label_list(allow_files=True, cfg='data'),
         'deps': attr.label_list(
             providers=[
                 ['py_deps'],
@@ -110,7 +115,7 @@ def py_binary_impl(ctx):
 
     return struct(
         files=set([run_script]),
-        runfiles = ctx.runfiles(
+        runfiles=ctx.runfiles(
             files=files,
             collect_data=True,
             collect_default=True,
