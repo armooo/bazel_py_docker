@@ -49,17 +49,26 @@ py_library = rule(
 )
 
 
-def copy_files(ctx, files, name):
+def copy_files(ctx, files):
     if files:
+        inputs=[i[0] for i in files]
+        outputs=[i[1] for i in files]
+
+        cp_manifest = ctx.new_file(ctx.label.name + '.cp_manifest')
+        ctx.file_action(
+            cp_manifest,
+            '\n'.join([
+                infile.path + ' ' + outfile.path
+                for infile, outfile in files
+            ])
+        )
+
         ctx.action(
-            outputs=[i[1] for i in files],
-            inputs=[i[0] for i in files],
+            inputs=inputs + [cp_manifest],
+            outputs=outputs,
             executable=ctx.executable.copy_files,
-            arguments=[
-                '{}={}'.format(i[0].path, i[1].path)
-                for i in files
-            ],
-            progress_message='building {} {}'.format(name, ctx.label)
+            arguments=['-m', cp_manifest.path],
+            progress_message='copying {}'.format(ctx.label)
         )
     return [i[1] for i in files]
 
@@ -90,8 +99,7 @@ def py_binary_impl(ctx):
             deb_file = ctx.new_file(deb_root + local_path)
             deb_root_cp.append([f, deb_file])
 
-    files += copy_files(ctx, py_root_cp, 'py_root')
-    files += copy_files(ctx, deb_root_cp, 'deb_root')
+    files += copy_files(ctx, py_root_cp + deb_root_cp)
 
     run_script = ctx.new_file(ctx.label.name)
     sh_path = ''
