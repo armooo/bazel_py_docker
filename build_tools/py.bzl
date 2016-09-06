@@ -1,14 +1,18 @@
 def py_library_impl(ctx):
+    py_deps = [
+        d
+        for dep in ctx.attr.deps
+        for d in getattr(dep, 'py_deps', [])
+    ]
     py_deps_external = [
         d
         for dep in ctx.attr.deps
         for d in getattr(dep, 'py_deps_external', [])
     ]
     if ctx.attr.external:
-        py_deps = []
         py_deps_external.extend(ctx.files.srcs)
     else:
-        py_deps = ctx.files.srcs
+        py_deps.extend(ctx.files.srcs)
 
     deb_deps = [
         d
