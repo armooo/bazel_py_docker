@@ -13,7 +13,7 @@ pypi_library(
    name='$2',
    src='$(basename "$1"/*.whl)',
    outs=[
-       $(awk 'BEGIN { FS = "," } {print "\047" $1 "\047,"}' "$1"/tmp/*dist-info/RECORD)
+   $(awk 'BEGIN { FS = "," }  !(/^\.\.\// || /^\//){print "\047" $1 "\047,"}' "$1"/tmp/*dist-info/RECORD)
    ],
    visibility=['//visibility:public'],
 )
