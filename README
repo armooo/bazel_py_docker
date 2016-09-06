@@ -14,6 +14,45 @@ $ curl http://localhost:8000
 $ docker rm -f (docker ps | awk '/hello_world_image/{print $1}')
 
 
+Getting started
+===============
+
+1) Add this repo to your WORKSPACE. It must be named bazel_py_docker.
+```
+git_repository(
+    name='bazel_py_docker',
+    remote='https://github.com/armooo/bazel_py_docker.git',
+    commit='565ef3f9e6756fb1063b27e624287becf752a64b',
+)
+```
+
+2) Add python to the list of Debian packages you require and regenerate the
+WORKSPCE rules. Finally load the rules in your WORKSPACE.
+```
+$ mkdir apt
+$ echo python > apt/pkg.list
+$ bazel build @bazel_py_docker//build_tools:deb_deps
+$ ./bazel-bin/external/bazel_py_docker/build_tools/deb_deps apt/pkg.list apt/pkg.bzl
+```
+And add this to your WORKSPACE file.
+```
+load('//apt:pkg.bzl', 'load_apt')
+load_apt()
+```
+
+3) Lets add a pypi dependency on requests.
+```
+load('@bazel_py_docker//build_tools:pypi.bzl', 'pypi', 'pip_bootstrap')
+pip_bootstrap()
+
+
+pypi(
+    name='requests',
+    version='2.10.0',
+)
+```
+
+
 The rules
 =========
 
