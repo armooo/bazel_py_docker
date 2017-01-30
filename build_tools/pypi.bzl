@@ -81,9 +81,9 @@ py_binary(
 
 def pip_bootstrap_impl(repository_ctx):
     repository_ctx.download(
-        'https://bootstrap.pypa.io/get-pip.py',
+        'https://bootstrap.pypa.io/3.2/get-pip.py',
         'get-pip.py',
-        '6a3da07567ece9ef3dd7cc7620f396a11b8256e1807815549d8c061650ed268e',
+        '2cc501b7dc0c3f17f8c352d69e541fda3fa658eb7a03764427a81e9c10d2dbd0',
         True,
     )
     result = repository_ctx.execute([
