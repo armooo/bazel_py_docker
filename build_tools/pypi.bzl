@@ -32,6 +32,7 @@ pypi_library = rule(
         '_pip': attr.label(
             default=Label('@pip_bootstrap//pip:pip_exe'),
             executable=True,
+            cfg='host',
         ),
     }
 )
@@ -57,6 +58,7 @@ pypi = repository_rule(
         '_pypi_get': attr.label(
             default=Label('//build_tools:pypi_get.sh', ),
             executable=True,
+            cfg='host',
         ),
     },
 )

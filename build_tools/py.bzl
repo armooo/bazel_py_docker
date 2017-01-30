@@ -153,6 +153,7 @@ py_binary = rule(
         'copy_files': attr.label(
             default=Label('//build_tools:copy_files'),
             executable=True,
+            cfg='host',
         ),
     },
     executable=True,

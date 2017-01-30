@@ -50,6 +50,10 @@ tar_pkg = rule(
     implementation=tar_pkg_impl,
     attrs={
         'files': attr.label_list(allow_files=True),
-        '_build_tar': attr.label(default=Label('//build_tools:build_tar'), executable=True),
+        '_build_tar': attr.label(
+            default=Label('//build_tools:build_tar'),
+            executable=True,
+            cfg='host',
+        ),
     },
 )
